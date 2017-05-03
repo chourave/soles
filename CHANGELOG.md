@@ -8,7 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Added
 - Initiated the change log
 - Documented usage in read me
-- Initiated dependencies
-- Initiated common tasks
+- Initialised dependencies
+- Initialised common tasks
+- Initialised gitignore
 
 [Unreleased]: https://github.com/plumula/soles/compare/init...HEAD
