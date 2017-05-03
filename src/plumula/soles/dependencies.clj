@@ -4,7 +4,8 @@
 (defmacro add-dependencies! 
   "Add `deps` as depencies to the environment.
 
-  For an example of the format, see `add-base-dependencies`."
+  For an example of the format, see `add-base-dependencies`.
+  "
   [& deps]
   (letfn [(scopify [[scope deps]] (map #(conj % :scope (name scope)) deps))
           (quotify [[dep & rest]] (into [`(quote ~dep)] rest))
@@ -12,6 +13,7 @@
     `(boot/merge-env! :dependencies ~(dependify deps))))
 
 (defn add-base-dependencies!
+  "Register the baseline project dependencies for a plumula project."
   []
   (add-dependencies!
     :provided [[org.clojure/clojure "1.9.0-alpha16"]

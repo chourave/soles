@@ -12,13 +12,17 @@
             [pandeiro.boot-http :refer [serve]]))
 
 (defn add-dir!
-  ""
+  "Add `dir` to the `key` path in the environment, providing `dir` actually
+  is a directory.
+  "
   [key dir]
   (when (.isDirectory (io/file dir))
     (boot/merge-env! key #{dir})))
 
 (defn soles!
-  ""
+  "Configure the project for project name `project`, version `version` and
+  optionally target directory `target`.
+  "
   ([project version]
    (soles! project version "target"))
   ([project version target-path]
