@@ -34,6 +34,65 @@ Then initialize soles with the project name and version, and add your own depend
   :compile [[org.clojure/test.check "0.9.0"]])
 ```
 
+
+### Useful tasks
+
+#### Launch development environment
+Watch the sources for changes and continuously
+- run a NREPL server on localhost:9009
+- serve the application on [localhost:3000](http://localhost:3000)
+- run the test suite on ClojureScript
+- run the test suite on Clojure
+- if the tests are successful, redeploy the application to the server on port
+  3000 (with live reloading)
+
+```bash
+boot dev
+```
+
+Connect to the Clojure REPL with boot (or do it from
+[Cursive](https://cursive-ide.com/userguide/repl.html#remote-repls) or
+[Cider](https://github.com/boot-clj/boot/wiki/Cider-REPL))
+```bash
+boot repl -c
+```
+
+To connect to a ClojureScript browser-based REPL, start it from the Clojure REPL
+and point your browser to [localhost:3000](http://localhost:3000).
+```clj
+(start-repl)
+```
+
+#### Build and install project jar file
+```bash
+boot deploy-local
+```
+
+#### Check for outdated dependencies
+```bash
+boot old
+```
+
+#### Deploy to clojars
+
+First set environment variables with your [Clojars](https://clojars.org/)
+credentials. Only do this on a trusted mono-user box. Environment variables are
+basically public.
+```bash
+export CLOJARS_USER=me
+export CLOJARS_PASS=sekr1t
+```
+
+Deploy a snapshot to Clojars:
+```bash
+boot deploy-snapshot
+```
+
+Deploy a release to Clojars:
+```bash
+boot deploy-release
+```
+
 ## Change log
 
 The notable changes to this project are documented in the [change log](CHANGELOG.md).
