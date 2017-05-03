@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Added
 - Initiated the change log
-- Initiated read me
+- Documented usage in read me
 - Initiated dependencies
 - Initiated common tasks
 
