@@ -20,19 +20,19 @@
 (defn soles!
   ""
   ([project version]
-    (soles! project version "target"))
+   (soles! project version "target"))
   ([project version target-path]
-    (add-dir! :source-paths "src")
-    (add-dir! :resource-paths "resources")
-    (boot/task-options!
-      task/pom {:project project, :version version}
-      serve {:dir target-path}
-      test-cljs {:js-env :node, :update-fs? true, :keep-errors? true, :optimizations :simple}
-      task/repl {:port 9009}
-      cljs {:compiler-options {:infer-externs true}}
-      task/target {:dir #{target-path}})
-    (bootlaces! version)
-    (lein/generate)))
+   (add-dir! :source-paths "src")
+   (add-dir! :resource-paths "resources")
+   (boot/task-options!
+     task/pom {:project project, :version version}
+     serve {:dir target-path}
+     test-cljs {:js-env :node, :update-fs? true, :keep-errors? true, :optimizations :simple}
+     task/repl {:port 9009}
+     cljs {:compiler-options {:infer-externs true}}
+     task/target {:dir #{target-path}})
+   (bootlaces! version)
+   (lein/generate)))
 
 (boot/deftask testing
   "Profile setup for running tests."
