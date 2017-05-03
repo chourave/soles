@@ -11,4 +11,4 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - Initiated dependencies
 - Initiated common tasks
 
-[Unreleased]: https://github.com/plumula/soles/init...HEAD
+[Unreleased]: https://github.com/plumula/soles/compare/init...HEAD
