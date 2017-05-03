@@ -11,9 +11,6 @@
             [clojure.java.io :as io]
             [pandeiro.boot-http :refer [serve]]))
 
-(def project 'plumula/mimolette)
-(def +version+ "0.1.0-SNAPSHOT")
-
 (defn add-dir!
   ""
   [key dir]
