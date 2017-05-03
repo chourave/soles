@@ -33,3 +33,7 @@ Then initialize soles with the project name and version, and add your own depend
 (add-dependencies!
   :compile [[org.clojure/test.check "0.9.0"]])
 ```
+
+## Change log
+
+The notable changes to this project are documented in the [change log](CHANGELOG.md).
