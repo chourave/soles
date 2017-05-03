@@ -67,9 +67,7 @@
 (boot/deftask deploy-local
   "Deploy project to local maven repository."
   []
-  (comp
-    (build-jar)
-    (task/install)))
+  (build-jar))
 
 (boot/deftask deploy-snapshot
   "Deploy snapshot version of project to clojars."
