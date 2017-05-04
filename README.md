@@ -13,6 +13,12 @@ I have no intent to maintain a public stable interface, so you probably
 shouldn’t depend on this. On the other hand, feel free to look around
 and copy whatever you find useful.
 
+## Known limitations
+
+The ClojureScript tests are currently compiled with simple optimizations, which
+is fairly slow. For some reason node is unhappy when optimizations are set to
+none, and alternate runners fare no better.
+
 ## Usage
 
 Add `soles` to your `build.boot` dependencies, `require` the namespace,
