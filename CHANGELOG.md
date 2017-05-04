@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - Initiated the change log
 - Documented usage in read me
 - Initialised dependencies
+- Shared dependency versions
 - Initialised common tasks
 - Initialised gitignore
 

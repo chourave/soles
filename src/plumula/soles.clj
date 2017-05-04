@@ -9,7 +9,8 @@
             [boot.lein :as lein]
             [crisptrutski.boot-cljs-test :refer [test-cljs report-errors!]]
             [clojure.java.io :as io]
-            [pandeiro.boot-http :refer [serve]]))
+            [pandeiro.boot-http :refer [serve]]
+            [plumula.soles.dependencies :refer [dependency-versions]]))
 
 (defn add-dir!
   "Add `dir` to the `key` path in the environment, providing `dir` actually
@@ -23,6 +24,8 @@
   "Configure the project for project name `project`, version `version` and
   optionally target directory `target`.
   "
+  ([project]
+   (soles! project (dependency-versions project)))
   ([project version]
    (soles! project version "target"))
   ([project version target-path]
