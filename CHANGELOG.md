@@ -12,5 +12,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - Shared dependency versions
 - Initialised common tasks
 - Initialised gitignore
+- MIT license
 
 [Unreleased]: https://github.com/plumula/soles/compare/init...HEAD
