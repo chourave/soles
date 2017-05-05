@@ -76,15 +76,7 @@ boot old
 
 #### Deploy to clojars
 
-First set environment variables with your [Clojars](https://clojars.org/)
-credentials. Only do this on a trusted mono-user box. Environment variables are
-basically public.
-```bash
-export CLOJARS_USER=me
-export CLOJARS_PASS=sekr1t
-```
-
-Deploy a snapshot to Clojars:
+Deploy a snapshot to [Clojars](https://clojars.org/):
 ```bash
 boot deploy-snapshot
 ```
@@ -94,6 +86,19 @@ Deploy a release to Clojars:
 boot deploy-release
 ```
 
+#### To avoid entering the Clojars credentials every time
+
+You can store you credentials in environment variables. 
+The security of doing so is dubious at best.
+The password may easily end up in your bash history file (or equivalent), and
+the environment variables can be seen by the `ps e` command.
+So, on a trusted, single-user box, this might not be a terrible idea. Maybe.
+Everywhere else: stay off.
+
+```bash
+export CLOJARS_USER=me
+export CLOJARS_PASS=sekr1t
+```
 
 ## Known limitations
 
