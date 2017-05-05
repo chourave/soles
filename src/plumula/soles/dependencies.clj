@@ -38,6 +38,7 @@
   'onetom/boot-lein-generate "0.1.3"
   'org.clojure/clojure "1.9.0-alpha16"
   'org.clojure/clojurescript "1.9.521"
+  'org.clojure/spec.alpha "0.1.108"
   'org.clojure/test.check "0.9.0"
   'org.clojure/tools.nrepl "0.2.13"
   'pandeiro/boot-http "0.8.0"
@@ -71,6 +72,8 @@
   (add-dependencies!
     :provided [org.clojure/clojure
                org.clojure/clojurescript]
+
+    :compile [org.clojure/spec.alpha]
 
     :test [adzerk/boot-cljs
            adzerk/boot-cljs-repl
