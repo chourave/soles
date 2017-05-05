@@ -13,11 +13,6 @@ I have no intent to maintain a public stable interface, so you probably
 shouldn’t depend on this. On the other hand, feel free to look around
 and copy whatever you find useful.
 
-## Known limitations
-
-The ClojureScript tests are currently compiled with simple optimizations, which
-is fairly slow. For some reason node is unhappy when optimizations are set to
-none, and alternate runners fare no better.
 
 ## Usage
 
@@ -99,6 +94,20 @@ Deploy a release to Clojars:
 boot deploy-release
 ```
 
+
+## Known limitations
+
+The ClojureScript tests are currently compiled with simple optimizations, which
+is fairly slow. For some reason node is unhappy when optimizations are set to
+none, and alternate runners fare no better.
+
+
 ## Change log
 
 The notable changes to this project are documented in the [change log](CHANGELOG.md).
+
+
+## License
+
+Distributed under the [MIT license](LICENSE.txt).
+Copyright &copy; 2017 [Frederic Merizen](https://www.linkedin.com/in/fredericmerizen/).
