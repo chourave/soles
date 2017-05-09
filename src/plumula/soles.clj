@@ -101,3 +101,10 @@
   (comp
     (build-jar)
     (push-snapshot)))
+
+(boot/deftask deploy-release
+  "Deploy release version of project to clojars."
+  []
+  (comp
+    (build-jar)
+    (push-release)))
