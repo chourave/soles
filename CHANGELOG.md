@@ -6,7 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ## [Unreleased]
 
 ### Changed
-- Make format of `add-dependencies!` more similar to `:require`
+- Moved parentheses before scope rather than after it in `add-dependencies!` 
+  to make similar more similar to `:require`’s
+- Now the whole dependency list gets scoped, not just the dependency name
+- Excluded clojure from specs dependency to avoid classpath conflict
+- It is now possible to require `soles` directly, without requiring
+  `soles.dependencies` first. This comes at the cost of making the `soles`
+  namespace have a side effect - not sure I like that. 
 
 ## [0.1.0] – 2017-05-09
 

@@ -21,18 +21,22 @@
 ; SOFTWARE.
 
 (ns plumula.soles
-  (:require [adzerk.boot-cljs :refer [cljs]]
-            [adzerk.boot-cljs-repl :refer [cljs-repl start-repl]]
-            [adzerk.boot-reload :refer [reload]]
-            [adzerk.boot-test :as test]
-            [adzerk.bootlaces :refer [bootlaces! build-jar push-snapshot push-release]]
-            [boot.core :as boot]
-            [boot.task.built-in :as task]
-            [boot.lein :as lein]
-            [crisptrutski.boot-cljs-test :refer [test-cljs report-errors!]]
-            [clojure.java.io :as io]
-            [pandeiro.boot-http :refer [serve]]
-            [plumula.soles.dependencies :refer [dependency-versions]]))
+  (:require [plumula.soles.dependencies :refer [add-base-dependencies!
+                                                dependency-versions]]))
+
+(add-base-dependencies!)
+
+(require '[adzerk.boot-cljs :refer [cljs]]
+         '[adzerk.boot-cljs-repl :refer [cljs-repl start-repl]]
+         '[adzerk.boot-reload :refer [reload]]
+         '[adzerk.boot-test :as test]
+         '[adzerk.bootlaces :refer [bootlaces! build-jar push-snapshot push-release]]
+         '[boot.core :as boot]
+         '[boot.lein :as lein]
+         '[boot.task.built-in :as task]
+         '[clojure.java.io :as io]
+         '[crisptrutski.boot-cljs-test :refer [test-cljs report-errors!]]
+         '[pandeiro.boot-http :refer [serve]])
 
 (defn add-dir!
   "Add `dir` to the `key` path in the environment, providing `dir` actually
@@ -41,6 +45,21 @@
   [key dir]
   (when (.isDirectory (io/file dir))
     (boot/merge-env! key #{dir})))
+
+(defmacro import-vars
+  "Make vars from the namespace `ns` available in `*ns*` too.
+  They can then be `require`d from `*ns*` as if they had been defined there.
+
+  `names` should be a sequence of symbols naming the vars to import."
+  [ns names]
+  `(do
+     ~@(apply concat
+              (for [name names
+                    :let [src (symbol (str ns) (str name))]]
+                `((def ~name ~(resolve src))
+                  (alter-meta! (var ~name) merge (meta (var ~src))))))))
+
+(import-vars plumula.soles.dependencies (add-dependencies!))
 
 (defn soles!
   "Configure the project for project name `project`, version `version` and

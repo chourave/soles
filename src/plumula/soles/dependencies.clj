@@ -56,13 +56,16 @@
   For an example of the format, see `add-base-dependencies`.
   "
   [& deps]
-  (letfn [(versionify [dep] (if (sequential? dep) dep [dep (dependency-versions dep)]))
-          (versionify-scoped [[scope & deps]] [scope (map versionify deps)])
+  (letfn [(listify [[scope & deps]] [scope (map #(if (sequential? %) % [%]) deps)])
+          (versionify [[dep & opts]] (into [dep (dependency-versions dep)] opts))
+          (versionify-scoped [[scope deps]] [scope (map versionify deps)])
           (scopify [[scope deps]] (map #(conj % :scope (name scope)) deps))
-          (quotify [[dep & rest]] (into [`(quote ~dep)] rest))
-          (dependify [deps] (->> deps (into [] (comp (map versionify-scoped)
-                                                     (mapcat scopify)
-                                                     (map quotify)))))]
+          (quotify [x] `(quote ~x))
+          (dependify [deps] (->> deps
+                                 (into [] (comp (map listify)
+                                                (map versionify-scoped)
+                                                (mapcat scopify)))
+                                 quotify))]
     `(boot/merge-env! :dependencies ~(dependify deps))))
 
 (defn add-base-dependencies!
@@ -72,7 +75,7 @@
     (:provided org.clojure/clojure
                org.clojure/clojurescript)
 
-    (:compile org.clojure/spec.alpha)
+    (:compile [org.clojure/spec.alpha :exclusions [org.clojure/clojure]])
 
     (:test adzerk/boot-cljs
            adzerk/boot-cljs-repl
