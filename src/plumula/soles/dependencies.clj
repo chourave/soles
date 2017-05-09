@@ -46,7 +46,7 @@
   'plumula/diff "0.1.0-SNAPSHOT"
   'plumula/mimolette "0.1.0-SNAPSHOT"
   'plumula/plumula "0.1.0-SNAPSHOT"
-  'plumula/soles "0.1.0"
+  'plumula/soles "0.2.0-SNAPSHOT"
   'swiss-arrows "1.0.0"
   'weasel "0.7.0"})
 
