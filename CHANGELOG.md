@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed
+- Make format of `add-dependencies!` more similar to `:require`
+
 ## [0.1.0] – 2017-05-09
 
 ### Added

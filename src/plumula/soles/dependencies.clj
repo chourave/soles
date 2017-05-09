@@ -57,11 +57,10 @@
   "
   [& deps]
   (letfn [(versionify [dep] (if (sequential? dep) dep [dep (dependency-versions dep)]))
-          (versionify-scoped [[scope deps]] [scope (map versionify deps)])
+          (versionify-scoped [[scope & deps]] [scope (map versionify deps)])
           (scopify [[scope deps]] (map #(conj % :scope (name scope)) deps))
           (quotify [[dep & rest]] (into [`(quote ~dep)] rest))
-          (dependify [deps] (->> deps (into [] (comp (partition-all 2)
-                                                     (map versionify-scoped)
+          (dependify [deps] (->> deps (into [] (comp (map versionify-scoped)
                                                      (mapcat scopify)
                                                      (map quotify)))))]
     `(boot/merge-env! :dependencies ~(dependify deps))))
@@ -70,12 +69,12 @@
   "Register the baseline project dependencies for a plumula project."
   []
   (add-dependencies!
-    :provided [org.clojure/clojure
-               org.clojure/clojurescript]
+    (:provided org.clojure/clojure
+               org.clojure/clojurescript)
 
-    :compile [org.clojure/spec.alpha]
+    (:compile org.clojure/spec.alpha)
 
-    :test [adzerk/boot-cljs
+    (:test adzerk/boot-cljs
            adzerk/boot-cljs-repl
            adzerk/boot-reload
            adzerk/boot-test
@@ -86,4 +85,4 @@
            onetom/boot-lein-generate
            org.clojure/tools.nrepl
            pandeiro/boot-http
-           weasel]))
+           weasel)))
