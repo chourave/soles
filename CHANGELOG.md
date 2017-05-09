@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.1.0] – 2017-05-09
+
 ### Added
 - Initiated the change log
 - Documented usage in read me
@@ -14,4 +16,5 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - Initialised gitignore
 - MIT license
 
-[Unreleased]: https://github.com/plumula/soles/compare/init...HEAD
+[Unreleased]: https://github.com/plumula/soles/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/plumula/soles/compare/init...0.1.0
