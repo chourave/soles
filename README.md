@@ -10,9 +10,10 @@ An attempt to factor out the commonalities between the bootfiles of the
 various plumula projects.
 
 I have no intent to maintain a public stable interface, so you probably
-shouldn’t depend on this. On the other hand, feel free to look around
-and copy whatever you find useful.
-
+shouldn’t depend on this. On the other hand, feel free to look around and copy
+whatever you find useful. A good place to learn more about boot is the
+[modern ClojureScript](https://github.com/magomimmo/modern-cljs) (2<sup>nd</sup>
+edition) series of tutorials.
 
 ## Usage
 
