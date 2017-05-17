@@ -23,69 +23,90 @@
 (ns plumula.soles.dependencies
   (:require [boot.core :as boot]))
 
-(def dependency-versions
- {'adzerk/boot-cljs "2.0.0"
-  'adzerk/boot-cljs-repl "0.3.3"
-  'adzerk/boot-reload "0.5.1"
-  'adzerk/boot-test "1.2.0"
-  'adzerk/bootlaces "0.1.13"
-  'cljsjs/google-diff-match-patch "20121119-2"
-  'cljsjs/quill "1.1.10-0"
-  'com.cemerick/piggieback "0.2.1"
-  'com.sksamuel.diff/diff "1.1.11"
-  'crisptrutski/boot-cljs-test "0.3.0"
-  'doo "0.1.7"
-  'onetom/boot-lein-generate "0.1.3"
-  'org.clojure/clojure "1.9.0-alpha16"
-  'org.clojure/clojurescript "1.9.521"
-  'org.clojure/spec.alpha "0.1.108"
-  'org.clojure/test.check "0.9.0"
-  'org.clojure/tools.nrepl "0.2.13"
-  'pandeiro/boot-http "0.8.0"
-  'plumula/delta "0.1.0-SNAPSHOT"
-  'plumula/diff "0.1.0-SNAPSHOT"
-  'plumula/mimolette "0.1.0-SNAPSHOT"
-  'plumula/plumula "0.1.0-SNAPSHOT"
-  'plumula/soles "0.2.0"
-  'swiss-arrows "1.0.0"
-  'weasel "0.7.0"})
+(defn version?
+  "Returns
+  - false if the list passed as an argument is a scope + dependencies
+  - true if the list the :versions keyword, marking a list of versions (as
+    opposed to a list of dependencies)
+  "
+  [[scope]]
+  (= :versions scope))
 
-(defmacro add-dependencies!
+(defn map-v
+  "Returns the map obtained by applying `f` to the values in the map `m`.
+  The keys are left unchanged.
+  "
+  [m f]
+  (into {} (for [[k v] m] [k (f v)])))
+
+(defn filter-versions
+  "Given a list of scoped dependencies `deps`, returns a map from dependency
+  names to lists of versions.
+
+  For instance, for the input [['clojure \"1.3\"]], the output will be
+  {'clojure [\"1.3\"]}
+  "
+  [deps]
+  (-> deps
+      (->> (eduction (comp (filter version?) (mapcat rest)))
+           (group-by first))
+      (map-v #(mapcat rest %))))
+
+(defn versionify
+  "Given a map of `versions` as produced by `filter-versions`, return a function
+  that takes a list specifying one dependency and
+  - returns it unchanged if this dependency isn’t in `versions`
+  - returns it with the corresponding entry from `versions` spliced in in second
+    position otherwise
+  "
+  [versions]
+  (fn [[dep & opts :as in]]
+    (if-let [v (versions dep)]
+      (reduce into [dep] [v opts])
+      in)))
+
+(defn scopify
+  "Given a two-element list, where the first element is a scope keyword,
+  and the second element is a list of dependency specifications, distribute
+  the scope over the dependency specifications (in a boot-compatible format).
+  "
+  [[scope deps]]
+  (map #(conj (vec %) :scope (name scope)) deps))
+
+(defn within-scope
+  "Given a function `f`, return a function that takes a list as its arguments.
+  The idea is that
+  - the first element of that list is a scope name,
+  - and the remaining elements are all dependency specifiers.
+  The function will return a two-element list, where
+  - the first element is the scope, unchanged
+  - the second element is a list, obtained my mapping `f` over the dependency
+  specifiers"
+  [f]
+  (fn [[scope & deps]]
+    [scope (map f deps)]))
+
+(defn vecify
+  "If the argument is sequential, return it as a vector. Else, return it
+  wrapped in a vector."
+  [dep]
+  (if (sequential? dep) (vec dep) [dep]))
+
+(defn dependify
+  "Turn a soles-style dependency list into a boot-style dependency list."
+  [deps]
+  (let [versions (filter-versions deps)]
+    (into []
+          (comp (remove version?)
+                (map (within-scope (comp (versionify versions)
+                                         vecify)))
+                (mapcat scopify))
+          deps)))
+
+(defn add-dependencies!
   "Add `deps` as depencies to the environment.
 
-  For an example of the format, see `add-base-dependencies`.
+  For an example of the format, see thes use in the `build.boot` file.
   "
   [& deps]
-  (letfn [(listify [[scope & deps]] [scope (map #(if (sequential? %) % [%]) deps)])
-          (versionify [[dep & opts]] (into [dep (dependency-versions dep)] opts))
-          (versionify-scoped [[scope deps]] [scope (map versionify deps)])
-          (scopify [[scope deps]] (map #(conj % :scope (name scope)) deps))
-          (quotify [x] `(quote ~x))
-          (dependify [deps] (->> deps
-                                 (into [] (comp (map listify)
-                                                (map versionify-scoped)
-                                                (mapcat scopify)))
-                                 quotify))]
-    `(boot/merge-env! :dependencies ~(dependify deps))))
-
-(defn add-base-dependencies!
-  "Register the baseline project dependencies for a plumula project."
-  []
-  (add-dependencies!
-    (:provided org.clojure/clojure
-               org.clojure/clojurescript)
-
-    (:compile [org.clojure/spec.alpha :exclusions [org.clojure/clojure]])
-
-    (:test adzerk/boot-cljs
-           adzerk/boot-cljs-repl
-           adzerk/boot-reload
-           adzerk/boot-test
-           adzerk/bootlaces
-           com.cemerick/piggieback
-           crisptrutski/boot-cljs-test
-           doo
-           onetom/boot-lein-generate
-           org.clojure/tools.nrepl
-           pandeiro/boot-http
-           weasel)))
+  (boot/merge-env! :dependencies (dependify deps)))

@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+- Common versions can now be passed to `add-dependencies!` in a :versions key
+
+### Removed
+- Soles no longer holds shared dependency versions
+
+### Changed
+- The arguments to `add-dependencies!` must now be quoted
+
 ## [0.2.0] – 2017-05-17
 
 ### Changed

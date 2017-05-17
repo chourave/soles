@@ -21,22 +21,19 @@
 ; SOFTWARE.
 
 (ns plumula.soles
-  (:require [plumula.soles.dependencies :refer [add-base-dependencies!
-                                                dependency-versions]]))
-
-(add-base-dependencies!)
-
-(require '[adzerk.boot-cljs :refer [cljs]]
-         '[adzerk.boot-cljs-repl :refer [cljs-repl start-repl]]
-         '[adzerk.boot-reload :refer [reload]]
-         '[adzerk.boot-test :as test]
-         '[adzerk.bootlaces :refer [bootlaces! build-jar push-snapshot push-release]]
-         '[boot.core :as boot]
-         '[boot.lein :as lein]
-         '[boot.task.built-in :as task]
-         '[clojure.java.io :as io]
-         '[crisptrutski.boot-cljs-test :refer [test-cljs report-errors!]]
-         '[pandeiro.boot-http :refer [serve]])
+  {:boot/export-tasks true}
+  (:require [adzerk.boot-cljs :refer [cljs]]
+            [adzerk.boot-cljs-repl :refer [cljs-repl start-repl]]
+            [adzerk.boot-reload :refer [reload]]
+            [adzerk.boot-test :as test]
+            [adzerk.bootlaces :refer [bootlaces! build-jar push-snapshot push-release]]
+            [boot.core :as boot]
+            [boot.lein :as lein]
+            [boot.task.built-in :as task]
+            [clojure.java.io :as io]
+            [crisptrutski.boot-cljs-test :refer [test-cljs report-errors!]]
+            [pandeiro.boot-http :refer [serve]]
+            [plumula.soles.dependencies]))
 
 (defn add-dir!
   "Add `dir` to the `key` path in the environment, providing `dir` actually
@@ -62,25 +59,26 @@
 (import-vars plumula.soles.dependencies (add-dependencies!))
 
 (defn soles!
-  "Configure the project for project name `project`, version `version` and
-  optionally target directory `target`.
+  "Configure the project for project name `project`, version
+  `version-or-versions` and optionally target directory `target`.
   "
-  ([project]
-   (soles! project (dependency-versions project)))
-  ([project version]
-   (soles! project version "target"))
-  ([project version target-path]
-   (add-dir! :source-paths "src")
-   (add-dir! :resource-paths "resources")
-   (boot/task-options!
-     task/pom {:project project, :version version}
-     serve {:dir target-path}
-     test-cljs {:js-env :node, :update-fs? true, :keep-errors? true, :optimizations :simple}
-     task/repl {:port 9009}
-     cljs {:compiler-options {:infer-externs true}}
-     task/target {:dir #{target-path}})
-   (bootlaces! version)
-   (lein/generate)))
+  ([project version-or-versions]
+   (soles! project version-or-versions "target"))
+  ([project version-or-versions target-path]
+   (let [version (if (map? version-or-versions)
+                   (version-or-versions project)
+                   version-or-versions)]
+    (add-dir! :source-paths "src")
+    (add-dir! :resource-paths "resources")
+    (boot/task-options!
+      task/pom {:project project, :version version}
+      serve {:dir target-path}
+      test-cljs {:js-env :node, :update-fs? true, :keep-errors? true, :optimizations :simple}
+      task/repl {:port 9009}
+      cljs {:compiler-options {:infer-externs true}}
+      task/target {:dir #{target-path}})
+    (bootlaces! version)
+    (lein/generate))))
 
 (boot/deftask testing
   "Profile setup for running tests."

@@ -17,13 +17,10 @@ edition) series of tutorials.
 
 ## Usage
 
-Add `soles` to your `build.boot` dependencies, `require` the namespace, and let
-it add its dependencies:
+Add `soles` to your `build.boot` dependencies and `require` its namespace:
 
 ```clj
 (set-env! :dependencies [['plumula/soles "X.Y.Z" :scope "test"]])
-(require '[plumula.soles.dependencies :refer [add-dependencies! add-base-dependencies!]])
-(add-base-dependencies!)
 (require '[plumula.soles :refer :all])
 ```
 
@@ -34,7 +31,38 @@ dependencies:
 (soles! 'plumula/mimolette "0.1.0-SNAPSHOT")
 
 (add-dependencies!
-  :compile [[org.clojure/test.check "0.9.0"]])
+  '(:test [org.clojure/test.check "0.9.0"]
+          [doo "0.1.7"]))
+```
+
+You can also specify your versions separately from the scopes. This can be
+useful in large multi-module projects for sharing dependency versions:
+```clj
+(def versions '[[org.clojure/test.check "0.9.0"]
+                [doo "0.1.7"]])
+
+(add-dependencies!
+  `(:versions ~@versions)
+  '(:test org.clojure/test.check
+          doo))
+```
+
+Note that you can leave out the brackets around single-element dependency lists,
+ as is the case here in the :test key.
+
+If you want to put other options, either in your shared version map or in your
+scoped dependencies, you can.
+
+```clj
+(add-dependencies!
+  '(:versions [org.clojure/spec.alpha "0.1.108"])
+  '(:compile  [org.clojure/spec.alpha :exclusions [org.clojure/clojure]])
+```
+
+```clj
+(add-dependencies!
+  '(:versions [org.clojure/spec.alpha "0.1.108" :exclusions [org.clojure/clojure]])
+  '(:compile  [org.clojure/spec.alpha])
 ```
 
 
