@@ -6,8 +6,8 @@
 ```
 [](/dependency)
 
-An attempt to factor out the commonalities between the bootfiles of the
-various plumula projects.
+An attempt to factor out the commonalities between the bootfiles of the various
+plumula projects.
 
 I have no intent to maintain a public stable interface, so you probably
 shouldn’t depend on this. On the other hand, feel free to look around and copy
@@ -17,8 +17,8 @@ edition) series of tutorials.
 
 ## Usage
 
-Add `soles` to your `build.boot` dependencies, `require` the namespace,
-and let it add its dependencies:
+Add `soles` to your `build.boot` dependencies, `require` the namespace, and let
+it add its dependencies:
 
 ```clj
 (set-env! :dependencies [['plumula/soles "X.Y.Z" :scope "test"]])
@@ -27,7 +27,8 @@ and let it add its dependencies:
 (require '[plumula.soles :refer :all])
 ```
 
-Then initialize soles with the project name and version, and add your own dependencies:
+Then initialize soles with the project name and version, and add your own
+dependencies:
 
 ```clj
 (soles! 'plumula/mimolette "0.1.0-SNAPSHOT")
