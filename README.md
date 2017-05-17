@@ -2,7 +2,7 @@
 
 [](dependency)
 ```clojure
-[plumula/soles "0.1.0"] ;; latest release
+[plumula/soles "0.2.0"] ;; latest release
 ```
 [](/dependency)
 

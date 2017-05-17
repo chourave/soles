@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.2.0] – 2017-05-17
+
 ### Changed
 - Moved parentheses before scope rather than after it in `add-dependencies!` 
   to make similar more similar to `:require`’s
@@ -25,5 +27,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - Initialised gitignore
 - MIT license
 
-[Unreleased]: https://github.com/plumula/soles/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/plumula/soles/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/plumula/soles/compare/init...0.2.0
 [0.1.0]: https://github.com/plumula/soles/compare/init...0.1.0
