@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
-- Common versions can now be passed to `add-dependencies!` in a :versions key
+- Common versions can now be passed to `add-dependencies!` in a `:versions` key
 
 ### Removed
 - Soles no longer holds shared dependency versions

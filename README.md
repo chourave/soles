@@ -88,11 +88,12 @@ Connect to the Clojure REPL with boot (or do it from
 boot repl -c
 ```
 
-To connect to a ClojureScript browser-based REPL, start it from the Clojure REPL
-and point your browser to [localhost:3000](http://localhost:3000).
+To connect to a ClojureScript browser-based REPL, start it from the Clojure REPL.
 ```clj
 (start-repl)
 ```
+You now need to point your browser to [localhost:3000](http://localhost:3000),
+and the REPL will go live in the command line.
 
 #### Build and install project jar file
 ```bash
@@ -123,7 +124,7 @@ The security of doing so is dubious at best.
 The password may easily end up in your bash history file (or equivalent), and
 the environment variables can be seen by the `ps e` command.
 So, on a trusted, single-user box, this might not be a terrible idea. Maybe.
-Everywhere else: stay off.
+Everywhere else: abstain.
 
 ```bash
 export CLOJARS_USER=me
@@ -132,10 +133,13 @@ export CLOJARS_PASS=sekr1t
 
 ## Known limitations
 
-The ClojureScript tests are currently compiled with simple optimizations, which
-is fairly slow. For some reason node is unhappy when optimizations are set to
-none, and alternate runners fare no better.
-
+- The ClojureScript tests are currently compiled with simple optimizations,
+  which is fairly slow. For some reason node is unhappy when optimizations are
+  set to `none`, and alternate runners fare no better.
+- When a dependency is listed in the `:versions`, then the version _must_ be set
+  in the `:versions` key. Using the `:versions` key just for a shared
+  `:exclusions` setting, and leaving the actual version under the scope key,
+  doesn’t work.
 
 ## Change log
 
