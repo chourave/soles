@@ -92,20 +92,27 @@
   []
   (task/show :updates true))
 
+(defn if-env
+  [envs env task]
+  (if (envs env)
+    (task)
+    identity))
+
 (boot/deftask dev
   "Launch Immediate Feedback Development Environment."
-  []
-  (comp
-    (testing)
-    (serve)
-    (task/watch)
-    (test-cljs)
-    (test/test)
-    (report-errors!)
-    (reload)
-    (cljs-repl)
-    (cljs)
-    (task/target)))
+  [t target TARGETS #{kw} "The set of target environments, defaults to #{:clj :cljs}"]
+  (let [target (or target #{:clj :cljs})]
+    (comp
+      (testing)
+      (if-env target :cljs serve)
+      (task/watch)
+      (if-env target :cljs test-cljs)
+      (if-env target :clj test/test)
+      (if-env target :cljs report-errors!)
+      (if-env target :cljs reload)
+      (if-env target :cljs cljs-repl)
+      (if-env target :cljs cljs)
+      (if-env target :cljs task/target))))
 
 (boot/deftask deploy-local
   "Deploy project to local maven repository."

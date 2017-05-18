@@ -37,10 +37,13 @@
      [doo "0.1.7"]
      [onetom/boot-lein-generate "0.1.3"]
      [pandeiro/boot-http "0.8.3"]
-     [weasel "0.7.0"]))
+     [weasel "0.7.0"])
+  '(:test
+     [boot/core "2.7.1"]))
 
 (require '[plumula.soles, :refer :all, :exclude [add-dependencies!]])
 (task-options!
+  dev {:target #{:clj}}
   pom {:description "A shared bootfile for the plumula projects."
        :url         "https://github.com/plumula/soles"
        :scm         {:url "https://github.com/plumula/soles"}

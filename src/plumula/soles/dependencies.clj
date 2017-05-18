@@ -43,8 +43,8 @@
   "Given a list of scoped dependencies `deps`, returns a map from dependency
   names to lists of versions.
 
-  For instance, for the input [['clojure \"1.3\"]], the output will be
-  {'clojure [\"1.3\"]}
+  For instance, for the input [[:versions ['clojure \"1.3\"]]], the output will
+  be {'clojure [\"1.3\"]}
   "
   [deps]
   (-> deps
@@ -90,7 +90,10 @@
   "If the argument is sequential, return it as a vector. Else, return it
   wrapped in a vector."
   [dep]
-  (if (sequential? dep) (vec dep) [dep]))
+  (condp #(%1 %2) dep
+    vector? dep
+    sequential? (vec dep)
+    [dep]))
 
 (defn dependify
   "Turn a soles-style dependency list into a boot-style dependency list."
