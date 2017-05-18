@@ -49,4 +49,4 @@
        :scm         {:url "https://github.com/plumula/soles"}
        :license     {"MIT" "http://www.opensource.org/licenses/mit-license.php"}})
 
-(soles! 'plumula/soles "0.3.0-SNAPSHOT")
+(soles! 'plumula/soles "0.3.0")

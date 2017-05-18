@@ -2,7 +2,7 @@
 
 [](dependency)
 ```clojure
-[plumula/soles "0.2.0"] ;; latest release
+[plumula/soles "0.3.0"] ;; latest release
 ```
 [](/dependency)
 
@@ -140,6 +140,7 @@ export CLOJARS_PASS=sekr1t
   in the `:versions` key. Using the `:versions` key just for a shared
   `:exclusions` setting, and leaving the actual version under the scope key,
   doesn’t work.
+- Dependencies are added too aggressively
 
 ## Change log
 
