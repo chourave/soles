@@ -110,6 +110,7 @@
       [com.cemerick/piggieback "0.2.1"]
       [crisptrutski/boot-cljs-test "0.3.0"]
       [doo "0.1.7"]
+      [org.clojure/tools.nrepl "0.2.12"]
       [pandeiro/boot-http "0.8.3"]
       [weasel "0.7.0"]]))
 

@@ -12,6 +12,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Changed
 - Clojure- or ClojureScript- specific dependencies are now loaded on demand
 
+### Fixed
+- `boot-cljs-repl` warning about missing dependencies
+
 ## [0.3.0] – 2017-05-18
 
 ### Added
