@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.4.0] – 2017-05-25
+
 ### Added
 - `soles!` now accepts a `:platform` keyword argument to cull out clj- or cljs-
   specific parts

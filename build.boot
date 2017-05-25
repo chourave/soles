@@ -33,7 +33,7 @@
      [boot/core "2.7.1"]))
 
 (require '[plumula.soles, :refer :all, :exclude [add-dependencies!]])
-(soles! 'plumula/soles "0.4.0-SNAPSHOT" :platform :clj)
+(soles! 'plumula/soles "0.4.0" :platform :clj)
 
 (require '[adzerk.boot-test :as test])
 (task-options!

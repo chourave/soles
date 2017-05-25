@@ -2,7 +2,7 @@
 
 [](dependency)
 ```clojure
-[plumula/soles "0.3.0"] ;; latest release
+[plumula/soles "0.4.0"] ;; latest release
 ```
 [](/dependency)
 
@@ -14,6 +14,7 @@ shouldn’t depend on this. On the other hand, feel free to look around and copy
 whatever you find useful. A good place to learn more about boot is the
 [modern ClojureScript](https://github.com/magomimmo/modern-cljs) (2<sup>nd</sup>
 edition) series of tutorials.
+
 
 ## Usage
 
@@ -95,15 +96,18 @@ To connect to a ClojureScript browser-based REPL, start it from the Clojure REPL
 You now need to point your browser to [localhost:3000](http://localhost:3000),
 and the REPL will go live in the command line.
 
+
 #### Build and install project jar file
 ```bash
 boot deploy-local
 ```
 
+
 #### Check for outdated dependencies
 ```bash
 boot old
 ```
+
 
 #### Deploy to clojars
 
@@ -116,6 +120,7 @@ Deploy a release to Clojars:
 ```bash
 boot deploy-release
 ```
+
 
 #### To avoid entering the Clojars credentials every time
 
@@ -131,6 +136,7 @@ export CLOJARS_USER=me
 export CLOJARS_PASS=sekr1t
 ```
 
+
 ## Known limitations
 
 - The ClojureScript tests are currently compiled with simple optimizations,
@@ -140,7 +146,7 @@ export CLOJARS_PASS=sekr1t
   in the `:versions` key. Using the `:versions` key just for a shared
   `:exclusions` setting, and leaving the actual version under the scope key,
   doesn’t work.
-- Dependencies are added too aggressively
+
 
 ## Change log
 
