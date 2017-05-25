@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+- `soles!` now accepts a `:platform` keyword argument to cull out clj- or cljs-
+  specific parts
+
+### Changed
+- Clojure- or ClojureScript- specific dependencies are now loaded on demand
+
 ## [0.3.0] – 2017-05-18
 
 ### Added

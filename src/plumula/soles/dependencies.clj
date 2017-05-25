@@ -108,7 +108,6 @@
 
 (defn add-dependencies!
   "Add `deps` as depencies to the environment.
-
   For an example of the format, see thes use in the `build.boot` file.
   "
   [& deps]

@@ -22,18 +22,13 @@
 
 (ns plumula.soles
   {:boot/export-tasks true}
-  (:require [adzerk.boot-cljs :refer [cljs]]
-            [adzerk.boot-cljs-repl :refer [cljs-repl start-repl]]
-            [adzerk.boot-reload :refer [reload]]
-            [adzerk.boot-test :as test]
-            [adzerk.bootlaces :refer [bootlaces! build-jar push-snapshot push-release]]
+  (:require [adzerk.bootlaces :refer [bootlaces! build-jar push-snapshot push-release]]
             [boot.core :as boot]
             [boot.lein :as lein]
             [boot.task.built-in :as task]
             [clojure.java.io :as io]
-            [crisptrutski.boot-cljs-test :refer [test-cljs report-errors!]]
-            [pandeiro.boot-http :refer [serve]]
-            [plumula.soles.dependencies]))
+            [plumula.soles.dependencies :refer [scopify]]
+            [plumula.soles.task-pipeline :as pipe]))
 
 (defn add-dir!
   "Add `dir` to the `key` path in the environment, providing `dir` actually
@@ -58,28 +53,6 @@
 
 (import-vars plumula.soles.dependencies (add-dependencies!))
 
-(defn soles!
-  "Configure the project for project name `project`, version
-  `version-or-versions` and optionally target directory `target`.
-  "
-  ([project version-or-versions]
-   (soles! project version-or-versions "target"))
-  ([project version-or-versions target-path]
-   (let [version (if (map? version-or-versions)
-                   (version-or-versions project)
-                   version-or-versions)]
-    (add-dir! :source-paths "src")
-    (add-dir! :resource-paths "resources")
-    (boot/task-options!
-      task/pom {:project project, :version version}
-      serve {:dir target-path}
-      test-cljs {:js-env :node, :update-fs? true, :keep-errors? true, :optimizations :simple}
-      task/repl {:port 9009}
-      cljs {:compiler-options {:infer-externs true}}
-      task/target {:dir #{target-path}})
-    (bootlaces! version)
-    (lein/generate))))
-
 (boot/deftask testing
   "Profile setup for running tests."
   []
@@ -92,27 +65,94 @@
   []
   (task/show :updates true))
 
-(defn if-env
-  [envs env task]
-  (if (envs env)
-    (task)
-    identity))
+(defmacro when-handles
+  "Executes the `body` if the `language` is a member of `platforms`."
+  [language platforms & body]
+  `(when ((keyword ~language) ~platforms)
+     ~@body))
+
+(defn platform-ns-symbol
+  "If called with just one argument, return the unqualified symbol corresponding
+  to the namespace that contains the pipeline for the `language`.
+  If called with an extra name argument, return the qualified symbol
+  corresponding to that name inside the namespace that contains the pipeline for
+  the `language`"
+  ([language]
+   (symbol (str "plumula.soles." (name language))))
+  ([language name]
+   (symbol (str (platform-ns-symbol language)) name)))
+
+(defrecord LanguagePipelineFactory [language dependencies]
+  pipe/PipelineFactory
+  (pipeline-dependencies-for [_ platforms]
+    (when-handles language platforms
+      (scopify [:test dependencies])))
+  (pipeline-for [_ platforms]
+    (when-handles language platforms
+      (require (platform-ns-symbol language))
+      @(resolve (platform-ns-symbol language "pipeline")))))
+
+(def clj-pipeline-factory
+  "The Clojure pipeline just runs the test suite."
+  (->LanguagePipelineFactory
+    :clj
+    '[[adzerk/boot-test "1.2.0"]]))
+
+(def cljs-pipeline-factory
+  "The ClojureScript pipeline runs the test suite, compiles the code and serves
+  the site, with live reloading.
+  "
+  (->LanguagePipelineFactory
+    :cljs
+    '[[adzerk/boot-cljs "2.0.0"]
+      [adzerk/boot-cljs-repl "0.3.3"]
+      [adzerk/boot-reload "0.5.1"]
+      [com.cemerick/piggieback "0.2.1"]
+      [crisptrutski/boot-cljs-test "0.3.0"]
+      [doo "0.1.7"]
+      [pandeiro/boot-http "0.8.3"]
+      [weasel "0.7.0"]]))
+
+(def common-pipeline
+  "The common pipeline sets up "
+  (reify pipe/Pipeline
+    (pipeline-tasks [_]
+      [{:priority 10 :task testing}
+       {:priority 40 :task task/watch}])
+    (set-pipeline-options! [_ project version target-path]
+      (boot/task-options!
+        task/pom {:project project, :version version}
+        task/target {:dir #{target-path}}))))
+
+(defn conform-platform
+  "Creature comfort inter"
+  [platform]
+  (condp #(%1 %2) platform
+    not #{:clj :cljs}
+    set? platform
+    #{platform}))
+
+(defn soles!
+  "Configure the project for project name `project`, version
+  `version-or-versions` and optionally target directory `target`.
+  "
+  ([project version-or-versions & {:keys [target-path platform]
+                                   :or   {target-path "target"}}]
+   (let [platform (conform-platform platform)
+         version (if (map? version-or-versions)
+                   (version-or-versions project)
+                   version-or-versions)]
+     (add-dir! :source-paths "src")
+     (add-dir! :resource-paths "resources")
+     (pipe/setup-pipeline! platform [common-pipeline clj-pipeline-factory cljs-pipeline-factory])
+     (pipe/set-options! project version target-path)
+     (bootlaces! version)
+     (lein/generate))))
 
 (boot/deftask dev
   "Launch Immediate Feedback Development Environment."
-  [t target TARGETS #{kw} "The set of target environments, defaults to #{:clj :cljs}"]
-  (let [target (or target #{:clj :cljs})]
-    (comp
-      (testing)
-      (if-env target :cljs serve)
-      (task/watch)
-      (if-env target :cljs test-cljs)
-      (if-env target :clj test/test)
-      (if-env target :cljs report-errors!)
-      (if-env target :cljs reload)
-      (if-env target :cljs cljs-repl)
-      (if-env target :cljs cljs)
-      (if-env target :cljs task/target))))
+  []
+  (pipe/dev))
 
 (boot/deftask deploy-local
   "Deploy project to local maven repository."

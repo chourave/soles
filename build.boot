@@ -27,26 +27,18 @@
   '(:provided
      [org.clojure/clojure "1.7.0"])
   '(:compile
-     [adzerk/boot-cljs "2.0.0"]
-     [adzerk/boot-cljs-repl "0.3.3"]
-     [adzerk/boot-reload "0.5.1"]
-     [adzerk/boot-test "1.2.0"]
-     [adzerk/bootlaces "0.1.13"]
-     [com.cemerick/piggieback "0.2.1"]
-     [crisptrutski/boot-cljs-test "0.3.0"]
-     [doo "0.1.7"]
      [onetom/boot-lein-generate "0.1.3"]
-     [pandeiro/boot-http "0.8.3"]
-     [weasel "0.7.0"])
+     [adzerk/bootlaces "0.1.13"])
   '(:test
      [boot/core "2.7.1"]))
 
 (require '[plumula.soles, :refer :all, :exclude [add-dependencies!]])
-(task-options!
-  dev {:target #{:clj}}
-  pom {:description "A shared bootfile for the plumula projects."
-       :url         "https://github.com/plumula/soles"
-       :scm         {:url "https://github.com/plumula/soles"}
-       :license     {"MIT" "http://www.opensource.org/licenses/mit-license.php"}})
+(soles! 'plumula/soles "0.4.0-SNAPSHOT" :platform :clj)
 
-(soles! 'plumula/soles "0.4.0-SNAPSHOT")
+(require '[adzerk.boot-test :as test])
+(task-options!
+  pom       {:description "A shared bootfile for the plumula projects."
+             :url         "https://github.com/plumula/soles"
+             :scm         {:url "https://github.com/plumula/soles"}
+             :license     {"MIT" "http://www.opensource.org/licenses/mit-license.php"}}
+  test/test {:exclude     #"^plumula.soles.cljs$"})
