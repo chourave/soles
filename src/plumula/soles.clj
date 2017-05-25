@@ -27,7 +27,7 @@
             [boot.lein :as lein]
             [boot.task.built-in :as task]
             [clojure.java.io :as io]
-            [plumula.soles.dependencies :refer [scopify]]
+            [plumula.soles.dependencies :as deps]
             [plumula.soles.task-pipeline :as pipe]))
 
 (defn add-dir!
@@ -86,7 +86,7 @@
   pipe/PipelineFactory
   (pipeline-dependencies-for [_ platforms]
     (when-handles language platforms
-      (scopify [:test dependencies])))
+      (deps/scopify [:test dependencies])))
   (pipeline-for [_ platforms]
     (when-handles language platforms
       (require (platform-ns-symbol language))
@@ -120,7 +120,7 @@
     (pipeline-tasks [_]
       [{:priority 10 :task testing}
        {:priority 40 :task task/watch}])
-    (set-pipeline-options! [_ project version target-path]
+    (set-options! [_ project version target-path]
       (boot/task-options!
         task/pom {:project project, :version version}
         task/target {:dir #{target-path}}))))
@@ -133,27 +133,33 @@
     set? platform
     #{platform}))
 
+(def ^{:doc "The active `Pipeline`. Mutated by `soles!`."} dev-pipeline)
+
 (defn soles!
   "Configure the project for project name `project`, version
   `version-or-versions` and optionally target directory `target`.
   "
-  ([project version-or-versions & {:keys [target-path platform]
+  ([project version-or-versions & {:keys [target-path platform dependencies]
                                    :or   {target-path "target"}}]
    (let [platform (conform-platform platform)
          version (if (map? version-or-versions)
                    (version-or-versions project)
-                   version-or-versions)]
+                   version-or-versions)
+         pipeline-factory (pipe/->CompositePipelineFactory
+                            [common-pipeline clj-pipeline-factory cljs-pipeline-factory])]
      (add-dir! :source-paths "src")
      (add-dir! :resource-paths "resources")
-     (pipe/setup-pipeline! platform [common-pipeline clj-pipeline-factory cljs-pipeline-factory])
-     (pipe/set-options! project version target-path)
+     (boot/merge-env! :dependencies (concat (deps/dependify dependencies)
+                                            (pipe/pipeline-dependencies-for pipeline-factory platform)))
+     (alter-var-root #'dev-pipeline (constantly (pipe/pipeline-for pipeline-factory platform)))
+     (pipe/set-options! dev-pipeline project version target-path)
      (bootlaces! version)
      (lein/generate))))
 
 (boot/deftask dev
   "Launch Immediate Feedback Development Environment."
   []
-  (pipe/dev))
+  (pipe/make-middleware dev-pipeline))
 
 (boot/deftask deploy-local
   "Deploy project to local maven repository."

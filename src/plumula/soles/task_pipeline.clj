@@ -23,8 +23,6 @@
 (ns plumula.soles.task-pipeline
   (:require [boot.core :as boot]))
 
-(def ^{:doc "The active `Pipeline`. Mutated by `setup-pipeline!`."} pipeline)
-
 (defprotocol PipelineFactory
   "Lists the required boot dependencies, and build a pipeline for a given
   platform. Both functions will typically return nil if none of the requested
@@ -45,13 +43,13 @@
   (pipeline-tasks [this]
     "Returns the sequence of prioritised tasks. The task is under
     the `:task` key, and the priority under the `:priority` key.")
-  (set-pipeline-options! [this project version target-path]
+  (set-options! [this project version target-path]
     "Configure boot tasks with default parameters."))
 
 (extend-protocol Pipeline
   nil
   (pipeline-tasks [_])
-  (set-pipeline-options! [_ _ _ _]))
+  (set-options! [_ _ _ _]))
 
 (defn dependencies
   "Returns the dependencies required for building a pipeline for agiven platform."
@@ -70,8 +68,8 @@
   Pipeline
   (pipeline-tasks [this]
     (mapcat pipeline-tasks pipelines))
-  (set-pipeline-options! [this project version target-path]
-    (dorun (map #(set-pipeline-options! % project version target-path) pipelines))))
+  (set-options! [this project version target-path]
+    (dorun (map #(set-options! % project version target-path) pipelines))))
 
 (defrecord CompositePipelineFactory [pipelines-and-factories]
   PipelineFactory
@@ -87,23 +85,3 @@
        (sort-by :priority)
        (map #((:task %)))
        (apply comp)))
-
-(defn dev
-  "Returns the middleware for the currently active pipeline."
-  []
-  (make-middleware pipeline))
-
-(defn set-options!
-  "Set boot task options in accordance with the currently active pipeline."
-  [project version target-path]
-  (set-pipeline-options! pipeline project version target-path))
-
-(defn setup-pipeline!
-  "Given a set of `target` platforms (keywords) and a sequence of `Pipeline`
-  and `PipelineFactory`s, set up the currently active pipeline and configure
-  default arguments for boot tasks.
-  "
-  ([target pipelines-and-factories]
-   (let [factory (->CompositePipelineFactory pipelines-and-factories)]
-     (boot/merge-env! :dependencies (pipeline-dependencies-for factory target))
-     (alter-var-root #'pipeline (constantly (pipeline-for factory target))))))

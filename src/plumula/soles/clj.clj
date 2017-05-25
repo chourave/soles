@@ -9,4 +9,4 @@
   (reify pipe/Pipeline
     (pipeline-tasks [_]
       [{:priority 60 :task test/test}])
-    (set-pipeline-options! [_ project version target-path])))
+    (set-options! [_ project version target-path])))

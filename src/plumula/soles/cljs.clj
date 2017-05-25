@@ -22,7 +22,7 @@
                                   (cljs-repl)
                                   (cljs)
                                   (task/target))}])
-    (set-pipeline-options! [_ project version target-path]
+    (set-options! [_ project version target-path]
       (boot/task-options!
         serve {:dir target-path}
         test-cljs {:js-env :node, :update-fs? true, :keep-errors? true, :optimizations :simple}

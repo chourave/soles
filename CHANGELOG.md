@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Added
 - `soles!` now accepts a `:platform` keyword argument to cull out clj- or cljs-
   specific parts
+- `soles!` can set project dependencies via a `:dependencies` keyword argument
 
 ### Changed
 - Clojure- or ClojureScript- specific dependencies are now loaded on demand
