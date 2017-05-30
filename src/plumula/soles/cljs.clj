@@ -24,7 +24,7 @@
                                   (task/target))}])
     (set-options! [_ project version target-path]
       (boot/task-options!
-        serve {:dir target-path}
-        test-cljs {:js-env :node, :update-fs? true, :keep-errors? true, :optimizations :simple}
-        task/repl {:port 9009}
-        cljs {:compiler-options {:infer-externs true}}))))
+        serve #(assoc % :dir target-path)
+        test-cljs #(assoc % :js-env :node, :update-fs? true, :keep-errors? true, :optimizations :simple)
+        task/repl #(assoc % :port 9009)
+        cljs #(assoc-in % [:compiler-options :infer-externs] true)))))

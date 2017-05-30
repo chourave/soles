@@ -122,8 +122,8 @@
        {:priority 40 :task task/watch}])
     (set-options! [_ project version target-path]
       (boot/task-options!
-        task/pom {:project project, :version version}
-        task/target {:dir #{target-path}}))))
+        task/pom #(assoc % :project project, :version version)
+        task/target #(update % :dir (fn [s] (conj s target-path)))))))
 
 (defn conform-platform
   "Creature comfort inter"
