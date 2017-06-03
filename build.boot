@@ -33,12 +33,12 @@
      [boot/core "2.7.1"]))
 
 (require '[plumula.soles, :refer :all, :exclude [add-dependencies!]])
-(soles! 'plumula/soles "0.4.1" :platform :clj)
+(soles! 'plumula/soles "0.4.2-SNAPSHOT" :platform :clj)
 
 (require '[adzerk.boot-test :as test])
 (task-options!
   pom       {:description "A shared bootfile for the plumula projects."
              :url         "https://github.com/plumula/soles"
              :scm         {:url "https://github.com/plumula/soles"}
-             :license     {"MIT" "http://www.opensource.org/licenses/mit-license.php"}}
+             :license     {"MIT" "https://opensource.org/licenses/MIT"}}
   test/test {:exclude     #"^plumula.soles.cljs$"})

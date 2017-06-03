@@ -12,8 +12,10 @@ plumula projects.
 I have no intent to maintain a public stable interface, so you probably
 shouldn’t depend on this. On the other hand, feel free to look around and copy
 whatever you find useful. A good place to learn more about boot is the
-[modern ClojureScript](https://github.com/magomimmo/modern-cljs) (2<sup>nd</sup>
-edition) series of tutorials.
+[modern ClojureScript][modern-clojurescript] (2<sup>nd</sup> edition) series of
+tutorials.
+
+[modern-clojurescript]: https://github.com/magomimmo/modern-cljs
 
 
 ## Usage
@@ -72,7 +74,7 @@ scoped dependencies, you can.
 #### Launch development environment
 Watch the sources for changes and continuously
 - run a NREPL server on localhost:9009
-- serve the application on [localhost:3000](http://localhost:3000)
+- serve the application on [localhost:3000]
 - run the test suite on ClojureScript
 - run the test suite on Clojure
 - if the tests are successful, redeploy the application to the server on port
@@ -82,9 +84,8 @@ Watch the sources for changes and continuously
 boot dev
 ```
 
-Connect to the Clojure REPL with boot (or do it from
-[Cursive](https://cursive-ide.com/userguide/repl.html#remote-repls) or
-[Cider](https://github.com/boot-clj/boot/wiki/Cider-REPL))
+Connect to the Clojure REPL with boot (or do it from [Cursive][cursive-repl] or
+[Cider][cider-repl])
 ```bash
 boot repl -c
 ```
@@ -93,8 +94,12 @@ To connect to a ClojureScript browser-based REPL, start it from the Clojure REPL
 ```clj
 (start-repl)
 ```
-You now need to point your browser to [localhost:3000](http://localhost:3000),
-and the REPL will go live in the command line.
+You now need to point your browser to [localhost:3000], and the REPL will go
+live in the command line.
+
+[cider-repl]: https://github.com/boot-clj/boot/wiki/Cider-REPL
+[cursive-repl]: https://cursive-ide.com/userguide/repl.html#remote-repls
+[localhost:3000]: http://localhost:3000
 
 
 #### Build and install project jar file
@@ -111,7 +116,7 @@ boot old
 
 #### Deploy to clojars
 
-Deploy a snapshot to [Clojars](https://clojars.org/):
+Deploy a snapshot to [Clojars]:
 ```bash
 boot deploy-snapshot
 ```
@@ -120,6 +125,8 @@ Deploy a release to Clojars:
 ```bash
 boot deploy-release
 ```
+
+[Clojars]: https://clojars.org/
 
 
 #### To avoid entering the Clojars credentials every time
@@ -150,10 +157,13 @@ export CLOJARS_PASS=sekr1t
 
 ## Change log
 
-The notable changes to this project are documented in the [change log](CHANGELOG.md).
+The notable changes to this project are documented in the
+[change log](CHANGELOG.md).
 
 
 ## License
 
 Distributed under the [MIT license](LICENSE.txt).
-Copyright &copy; 2017 [Frederic Merizen](https://www.linkedin.com/in/fredericmerizen/).
+Copyright &copy; 2017 [Frederic Merizen][frederic-merizen].
+
+[frederic-merizen]: https://www.linkedin.com/in/fredericmerizen/
