@@ -20,9 +20,12 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
-(set-env! :source-paths #{"src"})
+(def +project+ 'plumula/soles)
+(def +version+ "0.5.0")
 
+(set-env! :source-paths #{"src"})
 (require '[plumula.soles.dependencies, :refer :all])
+
 (add-dependencies!
   '(:provided
      [org.clojure/clojure "1.7.0"])
@@ -30,15 +33,32 @@
      [onetom/boot-lein-generate "0.1.3"]
      [adzerk/bootlaces "0.1.13"])
   '(:test
+     [adzerk/boot-test "1.2.0"]
      [boot/core "2.7.1"]))
 
-(require '[plumula.soles, :refer :all, :exclude [add-dependencies!]])
-(soles! 'plumula/soles "0.4.2-SNAPSHOT" :platform :clj)
+(require  '[adzerk.boot-test :as test]
+          '[adzerk.bootlaces :refer [bootlaces!]]
+          '[boot.lein :as lein]
+          '[plumula.soles :refer [add-dir! testing deploy-local deploy-snapshot deploy-release]])
 
-(require '[adzerk.boot-test :as test])
+(add-dir! :source-paths "src")
+
+(bootlaces! +version+)
+(lein/generate)
+
 (task-options!
-  pom       {:description "A shared bootfile for the plumula projects."
+  pom       {:project     +project+
+             :version     +version+
+             :description "A shared bootfile for the plumula projects."
              :url         "https://github.com/plumula/soles"
              :scm         {:url "https://github.com/plumula/soles"}
              :license     {"MIT" "https://opensource.org/licenses/MIT"}}
   test/test {:exclude     #"^plumula.soles.cljs$"})
+
+(deftask dev
+  "Launch Immediate Feedback Development Environment."
+  []
+  (comp
+    (testing)
+    (watch)
+    (test/test)))
