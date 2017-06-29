@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.5.0] – 2017-06-29
+
 ### Changed
 
 - Renamed `pipeline-dependencies-for` to `dependencies-for`
@@ -86,7 +88,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - MIT license
 
 
-[Unreleased]: https://github.com/plumula/soles/compare/0.4.1...HEAD
+[Unreleased]: https://github.com/plumula/soles/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/plumula/soles/compare/0.4.1...0.5.0
 [0.4.1]: https://github.com/plumula/soles/compare/0.4.0...0.4.1
 [0.4.0]: https://github.com/plumula/soles/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/plumula/soles/compare/0.2.0...0.3.0
