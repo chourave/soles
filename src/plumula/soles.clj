@@ -84,7 +84,7 @@
 
 (defrecord LanguagePipelineFactory [language dependencies]
   pipe/PipelineFactory
-  (pipeline-dependencies-for [_ platforms]
+  (dependencies-for [_ platforms]
     (when-handles language platforms
       (deps/scopify [:test dependencies])))
   (pipeline-for [_ platforms]
@@ -115,9 +115,9 @@
       [weasel "0.7.0"]]))
 
 (def common-pipeline
-  "The common pipeline sets up "
+  "The common pipeline sets up development directories and runs the file watcher."
   (reify pipe/Pipeline
-    (pipeline-tasks [_]
+    (tasks [_]
       [{:priority 10 :task testing}
        {:priority 40 :task task/watch}])
     (set-options! [_ project version target-path]
@@ -150,7 +150,7 @@
      (add-dir! :source-paths "src")
      (add-dir! :resource-paths "resources")
      (boot/merge-env! :dependencies (concat (deps/dependify dependencies)
-                                            (pipe/pipeline-dependencies-for pipeline-factory platform)))
+                                            (pipe/dependencies-for pipeline-factory platform)))
      (alter-var-root #'dev-pipeline (constantly (pipe/pipeline-for pipeline-factory platform)))
      (pipe/set-options! dev-pipeline project version target-path)
      (bootlaces! version)

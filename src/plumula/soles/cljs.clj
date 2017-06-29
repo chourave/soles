@@ -36,7 +36,7 @@
   Normally built by `plumula.soles/clj-pipeline-factory`.
   "
   (reify pipe/Pipeline
-    (pipeline-tasks [_]
+    (tasks [_]
       [{:priority 25 :task serve}
        {:priority 50 :task test-cljs}
        {:priority 80 :task #(comp (report-errors!)

@@ -27,7 +27,7 @@
   "Lists the required boot dependencies, and build a pipeline for a given
   platform. Both functions will typically return nil if none of the requested
   platforms is supported by this pipeline factory."
-  (pipeline-dependencies-for [this platforms]
+  (dependencies-for [this platforms]
     "Returns a list of dependencies that need to be present for this pipeline to
     work on the `platforms`. The returned list is in a format suitable for use
     in boot’s `:dependencies` environment.
@@ -40,7 +40,7 @@
 (defprotocol Pipeline
   "A pipeline is a sequence of prioritised tasks, as well as default
   options for boot tasks"
-  (pipeline-tasks [this]
+  (tasks [this]
     "Returns the sequence of prioritised tasks. The task is under
     the `:task` key, and the priority under the `:priority` key.")
   (set-options! [this project version target-path]
@@ -55,7 +55,7 @@
   "Returns the dependencies required for building a pipeline for agiven platform."
   [pipeline-or-factory platforms]
   (when (satisfies? PipelineFactory pipeline-or-factory)
-    (pipeline-dependencies-for pipeline-or-factory platforms)))
+    (dependencies-for pipeline-or-factory platforms)))
 
 (defn make-pipeline
   "Build a pipeline for a given platform."
@@ -66,14 +66,14 @@
 
 (defrecord CompositePipeline [pipelines]
   Pipeline
-  (pipeline-tasks [this]
-    (mapcat pipeline-tasks pipelines))
+  (tasks [this]
+    (mapcat tasks pipelines))
   (set-options! [this project version target-path]
     (dorun (map #(set-options! % project version target-path) pipelines))))
 
 (defrecord CompositePipelineFactory [pipelines-and-factories]
   PipelineFactory
-  (pipeline-dependencies-for [_ platforms]
+  (dependencies-for [_ platforms]
     (mapcat #(dependencies % platforms) pipelines-and-factories))
   (pipeline-for [_ platforms]
     (->CompositePipeline (map #(make-pipeline % platforms) pipelines-and-factories))))
@@ -81,7 +81,7 @@
 (defn make-middleware
   "Returns the middleware for a `pipeline`"
   [pipeline]
-  (->> (pipeline-tasks pipeline)
+  (->> (tasks pipeline)
        (sort-by :priority)
        (map #((:task %)))
        (apply comp)))

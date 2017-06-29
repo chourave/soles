@@ -43,9 +43,9 @@
   (testing "Build and run a 1-element pipeline"
     (boot/task-options! testing-task {:param 42})
     (let [pipeline (reify tp/Pipeline
-                     (pipeline-tasks [_]
+                     (tasks [_]
                        [{:priority 10 :task testing-task}])
-                     (set-pipeline-options! [_ _ _ _]))
+                     (set-options! [_ _ _ _]))
           middleware (tp/make-middleware pipeline)]
       (is (= [:testing 42]
              ((middleware identity) [])))))
@@ -53,27 +53,27 @@
     (boot/task-options! testing-task {:param 42})
     (boot/task-options! another-task {:param 54})
     (let [pipeline (reify tp/Pipeline
-                     (pipeline-tasks [_]
+                     (tasks [_]
                        [{:priority 20 :task another-task}
                         {:priority 10 :task testing-task}])
-                     (set-pipeline-options! [_ _ _ _]))
+                     (set-options! [_ _ _ _]))
           middleware (tp/make-middleware pipeline)]
       (is (= [:testing 42 :another 54]
              ((middleware identity) []))))
     (let [pipeline (reify tp/Pipeline
-                     (pipeline-tasks [_]
+                     (tasks [_]
                        [{:priority 10 :task testing-task}
                         {:priority 20 :task another-task}])
-                     (set-pipeline-options! [_ _ _ _]))
+                     (set-options! [_ _ _ _]))
           middleware (tp/make-middleware pipeline)]
       (is (= [:testing 42 :another 54]
              ((middleware identity) [])))))
   (testing "Task options are used even if they were set after building the pipeline"
     (boot/task-options! testing-task {:param 42})
     (let [pipeline (reify tp/Pipeline
-                     (pipeline-tasks [_]
+                     (tasks [_]
                        [{:priority 10 :task testing-task}])
-                     (set-pipeline-options! [_ _ _ _]))
+                     (set-options! [_ _ _ _]))
           _ (boot/task-options! testing-task {:param 54})
           middleware (tp/make-middleware pipeline)]
       (is (= [:testing 54]

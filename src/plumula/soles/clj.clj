@@ -29,6 +29,6 @@
   Normally built by `plumula.soles/clj-pipeline-factory`.
   "
   (reify pipe/Pipeline
-    (pipeline-tasks [_]
+    (tasks [_]
       [{:priority 60 :task test/test}])
     (set-options! [_ project version target-path])))

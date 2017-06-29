@@ -7,10 +7,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed
+
+- Renamed `pipeline-dependencies-for` to `dependencies-for`
+- Renamed `pipeline-tasks` to `tasks`
+
 ## [0.4.1] – 2017-05-30
-
--
-
 
 ### Changed
 
